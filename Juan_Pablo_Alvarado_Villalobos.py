@@ -653,19 +653,18 @@ def VentanaJuego(nombre):
     def Juego(dft):
         #           _____________________________
         #__________/Variables globales
-        global in1, posX_jug, posY_jug, Puntaje, Energia_c, Arop
+        global in1, posX_jug, posY_jug, Puntaje
         in1=1	#indicador para que el aro se sobre ponga a la nave
         posX_jug=300
         posY_jug=300
         Puntaje=0
         Energia_c=100
-        Arop=0
 
         pygame.init()
 
         #           _____________________________
         #__________/Crear pantalla
-        a=1000 #ancho pantalla
+        a=800 #ancho pantalla
         b=600 #largo pantalla
 
         black=(0,0,0)
@@ -826,13 +825,11 @@ def VentanaJuego(nombre):
                 if salir:
                     break
                 else:
-                    Arop+=1
-                    print("+1 aro")
+                	print("+1 aro")
 
             if 52>x_e>50:
                 if (ev_choque_punt((xi_e,yi_e),(y_e,x_e),(posX_jug,posY_jug),(300,150))):
-                    Energia_c+=10
-                    print("Energia+10")
+                    print("energia +10")
                 
             
 
@@ -848,13 +845,7 @@ def VentanaJuego(nombre):
             gen_img(Mira,posX_jug+121,posY_jug-50)
 
             Jug=pygame.transform.scale(Jug_c, (300, 150)) #El jugador siempre debe medir 300x150
-
-            Text=pygame.font.SysFont("monospace",20)
-            Txt_E=Text.render("Energia: "+str(Energia_c),1,(255,255,0))
-            root_jueg.blit(Txt_E,(800,100))
-            Txt_A=Text.render("Puntaje: "+str(Arop),1,(255,255,0))
-            root_jueg.blit(Txt_A,(800,200))
-           
+            
             pygame.display.update()
 
             c.tick(60)
