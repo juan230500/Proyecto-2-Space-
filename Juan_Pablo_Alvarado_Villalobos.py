@@ -35,52 +35,10 @@ def lenn(li):
         return 0
     return 1+lenn(li[1:])
 
-def pasar():
-    return
 
-def invdic(dic):
-    lk=list(dic.keys())
-    lv=list(dic.values())
-    def invdic2(dic,lk,lv,dic2={}):
-        if lk==[]:
-            return dic2
-        dic2[lv[0]]=lk[0]
-        return invdic2(dic,lk[1:],lv[1:],dic2)
-    return invdic2(dic,lk,lv,{})
 
-def suli(li,j):
-    if li==[]:
-	    return []
-    else:
-	    return [li[0][j]]+suli(li[1:],j)
 
-def high():
-    file=open("pts0.txt","r")
-    a=file.readline()
-    file.close()
-    try:
-        a=a.split(",")
-        a=a[1][1:]
-        return int(a)
-    except:
-        return 0
 
-def splitt(st,deli):
-    def delim(st,deli,res="",ind=0):
-        if st=="" or st[0]==deli:
-            return res,ind
-        else:
-            return delim(st[1:],deli,res+st[0],ind+1)
-    def splitt_aux(st,deli,res=[]):
-        if st=="":
-            return res
-        elif st[0]==deli:
-            return splitt_aux(st[1:],deli,res)
-        else:
-            b=delim(st,deli)
-            res+=[b[0]]
-            return splitt_aux(st[b[1]+1:],deli,res)
-    return splitt_aux(st,deli,[])
 
 
 
@@ -150,47 +108,29 @@ def leer(arch):
 
 #_________________/Ordenar lista de jugadores
 def ordenar(li):
-    def quicksort(L, first, last):
-        # definimos los índices y calculamos el pivote
-        i = first
-        j = last    
-        pivote = (L[i][1] + L[j][1]) / 2
 
-        # iteramos hasta que i no sea menor que j
-        while i < j:
-            # iteramos mientras que el valor de L[i] sea menor que pivote
-            while L[i][1] < pivote:
-                # Incrementamos el índice
-                i+=1
-            # iteramos mientras que el valor de L[j] sea mayor que pivote
-            while L[j][1] > pivote:
-                # decrementamos el índice
-                j-=1
-            # si i es menor o igual que j significa que los índices se han cruzado
-            if i <= j:
-                # creamos una variable temporal para guardar el valor de L[j]
-                x = L[j]
-                # intercambiamos los valores de L[j] y L[i]
-                L[j] = L[i]
-                L[i] = x
-                # incrementamos y decrementamos i y j respectivamente
-                i+=1
-                j-=1
+	def quicksort(L, first, last,i,j,pivote):
+	    if i <=j:
+	        if L[i][1] < pivote:
+	            return quicksort(L, first, last,i+1,j,pivote)
+	        if L[j][1] > pivote:
+	            return quicksort(L, first, last,i,j-1,pivote)
+	        if i <= j:
+	            L[i],L[j]=L[j],L[i]
+	            i+=1
+	            j-=1
+	            return quicksort(L, first, last,i,j,pivote)
+	    if first < j:
+	        return quicksort(L, first, last,first,j,(L[first][1]+L[j][1])/2)
+	    if last > i:
+	        return quicksort(L, i, last,i,last,(L[i][1]+L[last][1])/2)
+	    return L
 
-        # si first es menor que j mantenemos la recursividad
-        if first < j:
-            L = quicksort(L, first, j)
-        # si last es mayor que i mantenemos la recursividad
-        if last > i:
-            L = quicksort(L, i, last)
-
-        # devolvemos la lista ordenada
-        return L
-
-    return quicksort(li,0,len(li)-1)
-
+	return quicksort(li, 0, len(li)-1,0,len(li)-1,(li[0][1]+li[-1][1])/2)
 def ordenar2():
     a=leer("Jug.txt")
+    if a==[]:
+    	return
     a=ordenar(a)
     b=""
     for i in range(1,6):
@@ -228,24 +168,16 @@ def play2():
     root.mainloop()
 
 
-def playdis():
-    def Songdis():
-        winsound.PlaySound('songdis.wav', winsound.SND_ASYNC)
-    p=Thread(target=Songdis,args=())
-    p.start()
 
 #______________/Sección de variables predefinidas con uso en todo el programa
 
-global li_img
-li_img=['1_ar.gif','1_de.gif','1_ab.gif','1_iz.gif']
-
-global sel_esc
-sel_esc=0
 
 global dft
 dft="1" #1: asteroides 0:aros
 
-sel_esc=0
+global i_per
+i_per=0
+
 
 #______________/Sección de idomas
 
@@ -255,42 +187,42 @@ dic_trad_es=["Ventana principal","Introduzca el nombre \n (máx 10 caracteres)",
              "Balas restantes: ","Enemigos restantes: ","arriba: w \nabajo: s \nizquierda: a \nderecha: d \n disparo: espaciadora",
              "Nombre debe ser menor de 10 caracteres","Introduzca nombre","Jugador: ","Opciones","Puntaje máximo: ",
              "Nivel ","Mapa ","Aleatorio", "Reiniciar puntuaciones","Clave","Clave érronea","Reiniciar puntajes (requiere clave)","Dificultad",
-             "\tNombre\t\tPts\tDificultad\tFecha\n", "Juego de Tanques", "Puntuación alcanzada= ","Canción ","Parar","""******************************************************************
+             "\tNombre\t\tPts\tDificultad\tFecha\n", "Juego de Naves", "Puntuación alcanzada= ","Canción ","Parar","""******************************************************************
 Instituto: Tecnológico de Costa Rica
 Carrera :Ing. Computadores 
 Curso: Introducción a la programación
 País de Producción: Costa Rica
 Profesor: Milton Villegas Lemus
 Como implementar: Se invoca con F5 desde el Idle del código
-Programa: I Proyecto
-Autor: Juan Pablo Alvarado Villalobos
-Carné: 2018135360
+Programa: II Proyecto
+Autores: Juan Pablo Alvarado Villalobos, Sebastián "chino", ¿Julian?
+Carné: 2018135360,XXX,XXX
 Lenguaje: Python 3.6
-Versión: 7.1
-Ult.Fecha de mod: 22//18
+Versión: 6.1
+Ult.Fecha de mod: 3/6/18
 ******************************************************************""","Hacer clic en la pantalla para usar el teclado"]
 
 dic_trad_en=["Main window","Enter the name \n (max 10 characters)","Scores",'Back',"Game",
              "Remaining bullets: ", "Remaining enemies: ", " up: w \n down: s \n left: a \n right: d \n shot: space",
              "Name must be less than 10 characters", "Enter name", "Player: ", "Settings","Highscore: ",
              "Level ","Map ","Random","Restart scores","Key","Wrong key","Restart scores (requires password)","Difficulty",
-             "\tName\t\tPts\tDifficulty\t\tDate\n", "Game of Tanks", "Score reached= ","Song ","Stop", """******************************************************************
+             "\tName\t\tPts\tDifficulty\t\tDate\n", "Game of Space", "Score reached= ","Song ","Stop", """******************************************************************
 Institute: Tecnológico de Costa Rica
 Career :Ing. Computadores 
 Course: Introducción a la programación
 Country of Production: Costa Rica
 Teacher: Milton Villegas Lemus
 How to implement: It is invoked with F5 from the Idle of the code
-Program: I Proyecto
-Author: Juan Pablo Alvarado Villalobos
-Cardé: 2018135360
+Program: II Proyecto
+Authors: Juan Pablo Alvarado Villalobos, Sebastián "chino", Julian?
+Cardé: 2018135360,XXX,XXX
 Language: Python 3.6
-Version: 7.1
-Last modified date: 22//18
+Version: 6.1
+Last modified date: 3/6/18
 ******************************************************************""","Click on the screen to use the keyboard"]
 
 
-dic_trad=dic_trad_en #lista con todas las palabras en dos idiomas
+dic_trad=dic_trad_en #lista con todas las palabras que se leerá en todo el programa
 
 
 
@@ -302,16 +234,15 @@ Carrera :Ing. Computadores
 Curso: Intro a la programación
 Como implementar: se invoca con inter()
 Módulo : intercambio de idiomas
-Autores : Juan Pablo Alvarado
+Autores : Juan Pablo Alvarado, Sebastián "chino", Julian?
 Lenguaje: Python 3.6
 Version : 1.0
-Ult.Fecha de mod: 1/5/18
+Ult.Fecha de mod: 3/6/18
 Entradas : ninguna
 Restricciones: ninguna
 Salidas: ninguna
 ******************************************************************"""
 
-    winsound.Beep(100,2)
     global dic_trad,dic_trad_en
     if dic_trad[0]=="Ventana principal":
         dic=dic_trad_en
@@ -327,7 +258,8 @@ Salidas: ninguna
         Btn4.config(image=img_auxen)
         
     dic_trad=dic
-    
+
+    #Ajusta los labelsde la pantalla principal
     L_vr.config(text=dic[1])
     L_vr1.config(text=dic[22])
     root.title(dic[0])
@@ -397,13 +329,22 @@ Btn_song0.place(x=300,y=550)
 
 #______________/Sección de ventana de puntuaciones
 def Ventana1():
-    datos=""
-    for i in leer("t.txt"):
-    	print(50-len(i[0]))
-    	datos+=(i[0]+str(i[1]).rjust(50-len(i[0])+len(i[1])," ")+"\n")
-    texal="Top 5".center(50,"=")
-    texad=dic_trad[21]
-    datos=texad+datos
+    def imprimir(nom):
+        datos=""
+        for i in leer(nom):
+        	temp=str(i[1])
+        	if len(i[0])>7:
+        		temp=i[0]+"\t\t"+temp
+        	else:
+        		temp=i[0]+"\t\t\t"+temp
+
+        	datos+=(temp+"\n")
+        texal="Top 5".center(50,"=")
+        texad=dic_trad[21]
+        datos=texad+datos
+        return datos
+
+    datos=imprimir("Jug.txt")
     
     root.withdraw()
     v1=Toplevel(root)
@@ -432,10 +373,10 @@ Carrera :Ing. Computadores
 Curso: Intro a la programación
 Como implementar: se invoca con reiniciar()
 Módulo : reiniciar puntuaciones
-Autores : Juan Pablo Alvarado
+Autores : Juan Pablo Alvarado, Sebastián "chino", Julian?
 Lenguaje: Python 3.6
 Version : 1.0
-Ult.Fecha de mod: 1/5/18
+Ult.Fecha de mod: 3/6/18
 Entradas : ninguna
 Restricciones: ninguna
 Salidas: ninguna
@@ -444,17 +385,12 @@ Salidas: ninguna
         if clave!="luca":
             messagebox.showinfo(":(",dic_trad[18])
             return
-        file=open("pts0.txt","w") #archivo de puntuaciones
+        file=open("Jug.txt","w") #archivo de puntuaciones
         file.write("")
         file.close()
         ordenar2()
         
-        file=open("pts02.txt","r+") #archivo de puntuaciones
-        datos=file.read()
-        texal="Top 5".center(50,"=")
-        texad=dic_trad[21]
-        datos=texad+datos
-        file.close()
+        datos=imprimir("Jug.txt")
         
         L_v1.configure(text=datos)
         
@@ -526,7 +462,7 @@ def Ventana3():
     
 
     
-    #______________/Subsección de casillas
+    #______________/Generación de casillas para subsecciones
     C_v31=Canvas(v3,bg="grey", width=200,height=200)
     C_v31.place(x=50,y=50)
 
@@ -536,72 +472,40 @@ def Ventana3():
     C_v33=Canvas(v3,bg="grey", width=200,height=200)
     C_v33.place(x=50,y=300)
     
-    #______________/Subsección de mapas
-    if sel_esc==0:
-        fondoImg=cargarImg('m1.gif')
-    if sel_esc==1:
-        fondoImg=cargarImg('m2.gif')
-    if sel_esc==2:
-        fondoImg=cargarImg('m3.gif')
-    if sel_esc==3:
-        fondoImg=cargarImg('m4.gif')
-    if sel_esc==4:
-        fondoImg=cargarImg('in.gif')
-    F_v3m=Label(C_v31, image=fondoImg,bg="grey")
-    F_v3m.photo=fondoImg
-    F_v3m.place(x=95,y=50)
+    #______________/Subsección de personajes
+    print (i_per)
+    L_per=["SH.png","C.gif","exz.gif"]
+    def img_der():
+        global i_per
+        i_per+=1
+        i_per=i_per%3
+        Silueta=cargarImg(L_per[i_per])
+        Sh_cv.configure(image=Silueta)
+        Sh_cv.photo=Silueta
+    def img_iz():
+        global i_per
+        i_per-=1
+        i_per=i_per%3
+        Silueta=cargarImg(L_per[i_per])
+        Sh_cv.configure(image=Silueta)
+        Sh_cv.photo=Silueta
 
-    
-    def m1():
-        global sel_esc
-        sel_esc=0
-        fondoImg=cargarImg('m1.gif')
-        F_v3m.photo=fondoImg
-        F_v3m.config(image=fondoImg)
+    Silueta=cargarImg(L_per[i_per])
+    Sh_cv=Label(C_v31, image=Silueta, bg='white')
+    Sh_cv.photo=Silueta
+    Sh_cv.place(x=50,y=10)
 
-    def m2():
-        global sel_esc
-        sel_esc=1
-        fondoImg=cargarImg('m2.gif')
-        F_v3m.photo=fondoImg
-        F_v3m.config(image=fondoImg)
+    flchi=cargarImg("flechaizquierda.gif")
+    Btn_fi = Button(C_v31, image=flchi , command=img_iz,fg="#000000")
+    Btn_fi.image=flchi
+    Btn_fi.place(x=10,y=150)
+
+    flchd=cargarImg("flechaderecha.gif")
+    Btn_fd = Button(C_v31, image=flchd , command=img_der,fg="#000000")
+    Btn_fd.image=flchd
+    Btn_fd.place(x=100,y=150)
         
-    def m3():
-        global sel_esc
-        sel_esc=2
-        fondoImg=cargarImg('m3.gif')
-        F_v3m.photo=fondoImg
-        F_v3m.config(image=fondoImg)
 
-    def m4():
-        global sel_esc
-        sel_esc=3
-        fondoImg=cargarImg('m4.gif')
-        F_v3m.photo=fondoImg
-        F_v3m.config(image=fondoImg)
-
-    def ma():
-        global sel_esc
-        sel_esc=4
-        fondoImg=cargarImg('in.gif')
-        F_v3m.photo=fondoImg
-        F_v3m.config(image=fondoImg)
-
-    L_v3m=Label(C_v31,text=dic_trad[14],bg="grey",fg="black",font=('Eras Bold ITC',20),justify=LEFT)
-    L_v3m.place(x=65,y=2)
-
-    m=30
-    Btn_m1 = Button(C_v31,text=dic_trad[14]+"1",command=m1,bg='white',fg='green')
-    Btn_m1.place(x=2,y=40)
-    Btn_m2 = Button(C_v31,text=dic_trad[14]+"2",command=m2,bg='white',fg='green')
-    Btn_m2.place(x=2,y=40+m*1)
-    Btn_m3 = Button(C_v31,text=dic_trad[14]+"3",command=m3,bg='white',fg='green')
-    Btn_m3.place(x=2,y=40+m*2)
-    Btn_m4 = Button(C_v31,text=dic_trad[14]+"4",command=m4,bg='white',fg='green')
-    Btn_m4.place(x=2,y=40+m*3)
-    Btn_ma = Button(C_v31,text=dic_trad[14]+dic_trad[15],command=ma,bg='white',fg='green')
-    Btn_ma.place(x=2,y=40+m*4)
-    
 
 
     #______________/Subsección de dificultades
@@ -731,198 +635,242 @@ def Ventana3():
     
 #______________/Sección de ventana de de juego
 def VentanaJuego(nombre):
-	va=Toplevel()
-	va.geometry("800x600+100+50")
-	va.minsize(800,600)
-	va.resizable(NO,NO)
+    va=Toplevel()
+    va.geometry("800x600+100+50")
+    va.minsize(800,600)
+    va.resizable(NO,NO)
 
-	C_va=Canvas(va,width=800,height=600,bg="light green")
-	C_va.place(x=0,y=0)
-	C_va.create_image(400,300,image=CE2)
+    C_va=Canvas(va,width=800,height=600,bg="light green")
+    C_va.place(x=0,y=0)
+    C_va.create_image(400,300,image=CE2)
 
-	tex=dic_trad[26]
+    tex=dic_trad[26]
 
-	L_va=Label(va,text=tex,bg="white",fg="#000000",font=('Eras Bold ITC',12),justify=CENTER)
-	L_va.place(x=130,y=20)
-
-
-
-	
-
-	def Juego(dft):
-		#           _____________________________
-		#__________/Variables globales
-		global in1, posX_jug, posY_jug
-		in1=1	#indicador para que el aro se sobre ponga a la nave
-		posX_jug=300
-		posY_jug=300
-
-		pygame.init()
-
-		#           _____________________________
-		#__________/Crear pantalla
-		a=800 #ancho pantalla
-		b=600 #largo pantalla
-
-		black=(0,0,0)
-
-		root_jueg=pygame.display.set_mode((a,b))
-		pygame.display.set_caption("Juego")
-		c=pygame.time.Clock()
-
-		#           _____________________________
-		#__________/Cargar imagenes
-		Jug_w=pygame.image.load("Jug_w.png") #Jugador hacia arriba
-		Jug_a=pygame.image.load("Jug_a.png") #Jugador hacia la izquierda
-		Jug_s=pygame.image.load("Jug_s.png") #Jugador hacia abajo
-		Jug_d=pygame.image.load("Jug_d.png") #Jugador hacia la derecha
-		Jug_c=pygame.image.load("Jug_c.png") #Jugador centro
-		Jug=pygame.image.load("Jug_c.png") #Jugador
-		Aro=pygame.image.load("Aro.png") #Aro
-		fondo=pygame.image.load("fondo.jpg") #Fondo
-		Mira=pygame.image.load("mira.png")
-
-		#           _____________________________
-		#__________/Efectos de sonido
-		colision_sonido= pygame.mixer.Sound('crash.wav')
-
-		#           _____________________________
-		#__________/Generar y reescalar imagenes
-		'''def car(x,y): #Generar jugador
-			root_jueg.blit(Jug,(x,y))
-
-		def aro(x,y): #Generar aro
-			root_jueg.blit(Aro,(x,y))
-
-		def mira(x,y): #Generar aro
-			root_jueg.blit(Mira,(x,y))'''
-
-		def gen_img(img,x,y): #Generar cualquier imagen
-			root_jueg.blit(img,(x,y))
+    L_va=Label(va,text=tex,bg="white",fg="#000000",font=('Eras Bold ITC',12),justify=CENTER)
+    L_va.place(x=130,y=20)
 
 
-		def exp(surf,x,y,xi,yi): #Exapandir superficie (surf), se expande a x,y y se colaca siempre en xi,yi
-			global in1
-			sleep(0.001)
-			if x>500: #Si sobre pasa la medida 500x500 traspasa al jugaodr
-				in1=0
-			surf=pygame.transform.scale(surf, (x, y))
-			root_jueg.blit(surf,(xi,yi))
+    def Juego(dft):
+        #           _____________________________
+        #__________/Variables globales
+        global in1, posX_jug, posY_jug, Puntaje
+        in1=1	#indicador para que el aro se sobre ponga a la nave
+        posX_jug=300
+        posY_jug=300
+        Puntaje=0
+        Energia_c=100
 
-		def ev_aro(PosJug,PosAro):
-		   print (PosJug)
-		   print (PosAro)
-		   if PosJug[0]<(PosAro[0]+500) and (PosJug[0]+300)>=PosAro[0] and PosJug[1]+150>=PosAro[1] and (PosJug[1]+150)<=(PosAro[1]+500):
-		      if PosJug[0]>(PosAro[0]+10) and (PosJug[0]+300)<(PosAro[0]+490) and PosJug[1]>(PosAro[1]+10) and (PosJug[1]+150)<(PosAro[1]+480):
-		         print ('Pasa')
-		      else:
-		         print ('Choca')
-		         colision_sonido.play()
-		         sleep(2)
-		         return True
-		   else:
-		      print ('No suma')
-		   return
+        pygame.init()
 
+        #           _____________________________
+        #__________/Crear pantalla
+        a=800 #ancho pantalla
+        b=600 #largo pantalla
 
-		#           _____________________________
-		#__________/Posiciones
+        black=(0,0,0)
 
-		xi_a,yi_a=300,300 #posicon inicial del aro
-		x_a=100
-		y_a=100
+        root_jueg=pygame.display.set_mode((a,b))
+        pygame.display.set_caption("Juego")
+        c=pygame.time.Clock()
 
-		i=1 #indicador de parada del while principal
-		a=6 #incremento de aro inicial
+        #           _____________________________
+        #__________/Cargar imagenes
+        Jug_w=pygame.image.load("Jug_w.png") #Jugador hacia arriba
+        Jug_a=pygame.image.load("Jug_a.png") #Jugador hacia la izquierda
+        Jug_s=pygame.image.load("Jug_s.png") #Jugador hacia abajo
+        Jug_d=pygame.image.load("Jug_d.png") #Jugador hacia la derecha
+        Jug_c=pygame.image.load("Jug_c.png") #Jugador centro
+        Jug=pygame.image.load("Jug_c.png") #Jugador
+        Aro=pygame.image.load("Aro.png") #Aro
+        Enem=pygame.image.load("Enem_c.png")
+        fondo=pygame.image.load("fondo.jpg") #Fondo
+        Explosion=pygame.image.load("explosion.png") 
+        Mira=pygame.image.load("mira.png")
+        Energia=pygame.image.load("energía.png")
 
+        #           _____________________________
+        #__________/Efectos de sonido
+        colision_sonido= pygame.mixer.Sound('crash.wav')
 
+        #           _____________________________
+        #__________/Generar y reescalar imagenes
+        '''def car(x,y): #Generar jugador
+                root_jueg.blit(Jug,(x,y))
 
-		#           _____________________________
-		#__________/movimiento
-		while i:
-			root_jueg.fill(black)
-			root_jueg.blit(fondo,(0,0))
+        def aro(x,y): #Generar aro
+                root_jueg.blit(Aro,(x,y))
 
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					i=0
+        def mira(x,y): #Generar aro
+                root_jueg.blit(Mira,(x,y))'''
 
-			teclas = pygame.key.get_pressed()
-
-			if teclas[pygame.K_LEFT] or teclas[97]:
-				if posX_jug>=10:
-					posX_jug-=10
-					Jug=pygame.transform.scale(Jug_a, (300, 150))
-			elif teclas[pygame.K_RIGHT] or teclas[100]:
-				if posX_jug<=499:
-					posX_jug+=10
-					Jug=pygame.transform.scale(Jug_d, (300, 150))
-			elif teclas[pygame.K_UP] or teclas[119]:
-				if posY_jug>=60:
-					posY_jug-=10
-					Jug=pygame.transform.scale(Jug_w, (300, 150))
-			elif teclas[pygame.K_DOWN] or teclas[115]:
-				if posY_jug<=445:
-					posY_jug+=10
-					Jug=pygame.transform.scale(Jug_s, (300, 150))
-
-				
+        def gen_img(img,x,y): #Generar cualquier imagen
+                root_jueg.blit(img,(x,y))
 
 
-			if x_a>600: #Si el aro mide más de 600x600 se resetean sus condiciones de inicio
-				x_a,y_a=50,50
-				in1=1
-				xi_a,yi_a=randint(100,500),randint(200,500) #Se varía un poco el eje
-				if a<14: 
-					a+=0.5 #Se limita la velocidad de incremento
-
-			x_a+=int(a) #aumenta el incremento de "exp"
-			y_a+=int(a)
-			xi_a-=a//2 #desplaza el eje de imagen para dar efecto de crecer sobre sí misma
-			yi_a-=a//2
-
-			if x_a>500 and in1==1:
-				salir=ev_aro((posX_jug,posY_jug),(xi_a,yi_a))
-				if salir:
-					break
-			
-
-			if in1: #si debe traspasarlo, entonces se genera primero el aro
-				exp(Aro,x_a,y_a,xi_a,yi_a)
-				gen_img(Jug,posX_jug,posY_jug)
-			else: #si no debe traspasarlo, entonces se genera primero el jugador
-				gen_img(Jug,posX_jug,posY_jug)
-				exp(Aro,x_a,y_a,xi_a,yi_a)
-
-			gen_img(Mira,posX_jug+121,posY_jug-50)
-
-			Jug=pygame.transform.scale(Jug_c, (300, 150)) #El jugador siempre debe medir 300x150
-			
-			pygame.display.update()
-
-			c.tick(60)
-		root.deiconify()
-		pygame.quit()
-
-	def aro():
-		root.withdraw()
-		va.destroy()
-		Juego(1) #aro
-	def enemigos():
-		root.withdraw()
-		va.destroy()
-		Juego(0) #enemigo
+        def exp(surf,x,y,xi,yi): #Exapandir superficie (surf), se expande a x,y y se colaca siempre en xi,yi
+                global in1
+                sleep(0.001)
+                if x>500: #Si sobre pasa la medida 500x500 traspasa al jugaodr
+                        in1=0
+                surf=pygame.transform.scale(surf, (x, y))
+                root_jueg.blit(surf,(xi,yi))
 
 
-	home=cargarImg("aro.gif")
-	Btn_back1 = Button(C_va, image=home ,command=aro, fg = "#000000")
-	Btn_back1.image = home
-	Btn_back1.place(x=500,y=300)
+        def ev_choque_comp(posa,dima,posb,dimb):
+            if (posb[0]<=posa[0] and posa[0]+dima[0]<=posb[0]+dimb[0]) and (posb[1]<=posa[1] and posa[1]+dima[1]<=posb[1]+dimb[1]):
+                return True
+            return False
 
-	home1=cargarImg("aste.gif")
-	Btn_back2 = Button(C_va, image=home1 ,command=enemigos, fg = "#000000")
-	Btn_back2.image = home1
-	Btn_back2.place(x=250,y=300)
+        def ev_choque_punt(posa,dima,posb,dimb):
+            if (posb[0]<=posa[0]<=posb[0]+dimb[0] or posb[0]<=posa[0]+dima[0]<=posb[0]+dimb[0]) and (posb[1]<=posa[1]<=posb[1]+dimb[1] or posb[1]<=posa[1]+dima[1]<=posb[1]+dimb[1]):
+                return True
+            return False
+
+        def ev_aro(PosJug,PosAro):
+           global Puntaje
+           if PosJug[0]<(PosAro[0]+480) and (PosJug[0]+300)>=PosAro[0] and PosJug[1]+150>=PosAro[1] and (PosJug[1])<=(PosAro[1]+500):
+              if PosJug[0]>(PosAro[0]+10) and (PosJug[0]+300)<(PosAro[0]+490) and PosJug[1]>(PosAro[1]+10) and (PosJug[1]+150)<(PosAro[1]+480):
+                 Puntaje+=25
+                 print(Puntaje)
+              else:
+                 colision_sonido.play()
+                 exp(Aro,x_a,y_a,xi_a,yi_a)
+                 gen_img(Explosion,posX_jug-150,posY_jug-75)
+                 pygame.display.update()
+                 c.tick(60)
+                 sleep(5)
+                 return True
+#           else:
+ #             return
+
+
+        #           _____________________________
+        #__________/Posiciones
+
+        xi_a,yi_a=300,300 #posicon inicial del aro
+        x_a=100
+        y_a=100
+
+        xi_e,yi_e=300,300
+        x_e=20
+        y_e=20
+
+        Energia=pygame.transform.scale(Energia, (25, 25))
+
+        i=1 #indicador de parada del while principal
+        a=6 #incremento de aro inicial
+        e=1 #incremento de energia inicial
+
+
+
+        #           _____________________________
+        #__________/movimiento
+        while i:
+            root_jueg.fill(black)
+            root_jueg.blit(fondo,(0,0))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    i=0
+
+            teclas = pygame.key.get_pressed()
+
+            if teclas[pygame.K_LEFT] or teclas[97]:
+                if posX_jug>=10:
+                    posX_jug-=10
+                    Jug=pygame.transform.scale(Jug_a, (300, 150))
+            elif teclas[pygame.K_RIGHT] or teclas[100]:
+                if posX_jug<=499:
+                    posX_jug+=10
+                    Jug=pygame.transform.scale(Jug_d, (300, 150))
+            elif teclas[pygame.K_UP] or teclas[119]:
+                if posY_jug>=60:
+                    posY_jug-=10
+                    Jug=pygame.transform.scale(Jug_w, (300, 150))
+            elif teclas[pygame.K_DOWN] or teclas[115]:
+                if posY_jug<=445:
+                    posY_jug+=10
+                    Jug=pygame.transform.scale(Jug_s, (300, 150))
+
+            if x_a>600: #Si el aro mide más de 600x600 se resetean sus condiciones de inicio
+                x_a,y_a=50,50
+                in1=1
+                xi_a,yi_a=randint(100,500),randint(200,500) #Se varía un poco el eje
+                if a<14: 
+                    a+=0.5 #Se limita la velocidad de incremento
+
+            if x_e>60: #Si el aro mide más de 600x600 se resetean sus condiciones de inicio
+                if randint(0,50)==1:
+                    x_e=0
+                    y_e=0
+                    xi_e,yi_e=randint(100,500),randint(200,500) #Se varía un poco el eje
+                else:
+                    xi_e,yi_e=1000,1000
+                if e<1: 
+                    e+=0.5 #Se limita la velocidad de incremento
+
+            x_a+=int(a) #aumenta el incremento de "exp"
+            y_a+=int(a)
+            xi_a-=a//2 #desplaza el eje de imagen para dar efecto de crecer sobre sí misma
+            yi_a-=a//2
+
+
+            x_e+=int(e) #aumenta el incremento de "exp"
+            y_e+=int(e)
+            xi_e-=e//2 #desplaza el eje de imagen para dar efecto de crecer sobre sí misma
+            yi_e-=e//2
+
+            if x_a>500 and in1==1:
+                salir=ev_aro((posX_jug,posY_jug),(xi_a,yi_a))
+                if salir:
+                    break
+                else:
+                	print("+1 aro")
+
+            if 52>x_e>50:
+                if (ev_choque_punt((xi_e,yi_e),(y_e,x_e),(posX_jug,posY_jug),(300,150))):
+                    print("energia +10")
+                
+            
+
+            exp(Energia,x_e,y_e,xi_e,yi_e)
+            if in1: #si debe traspasarlo, entonces se genera primero el aro
+                exp(Aro,x_a,y_a,xi_a,yi_a)
+                gen_img(Jug,posX_jug,posY_jug)
+            else: #si no debe traspasarlo, entonces se genera primero el jugador
+                gen_img(Jug,posX_jug,posY_jug)
+                exp(Aro,x_a,y_a,xi_a,yi_a)
+
+            
+            gen_img(Mira,posX_jug+121,posY_jug-50)
+
+            Jug=pygame.transform.scale(Jug_c, (300, 150)) #El jugador siempre debe medir 300x150
+            
+            pygame.display.update()
+
+            c.tick(60)
+        root.deiconify()
+        pygame.quit()
+
+    def aro():
+        root.withdraw()
+        va.destroy()
+        Juego(1) #aro
+    def enemigos():
+        root.withdraw()
+        va.destroy()
+        Juego(0) #enemigo
+
+
+    home=cargarImg("aro.gif")
+    Btn_back1 = Button(C_va, image=home ,command=aro, fg = "#000000")
+    Btn_back1.image = home
+    Btn_back1.place(x=500,y=300)
+
+    home1=cargarImg("aste.gif")
+    Btn_back2 = Button(C_va, image=home1 ,command=enemigos, fg = "#000000")
+    Btn_back2.image = home1
+    Btn_back2.place(x=250,y=300)
 	
     
 #______________/Sección de preventana del juego
