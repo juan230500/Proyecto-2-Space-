@@ -653,18 +653,20 @@ def VentanaJuego(nombre):
     def Juego(dft):
         #           _____________________________
         #__________/Variables globales
-        global in1, posX_jug, posY_jug, Puntaje
+        global in1, posX_jug, posY_jug, Puntaje, Energia_c, Arop, Count
         in1=1	#indicador para que el aro se sobre ponga a la nave
         posX_jug=300
         posY_jug=300
         Puntaje=0
         Energia_c=100
+        Arop=0
+        Count=0
 
         pygame.init()
 
         #           _____________________________
         #__________/Crear pantalla
-        a=800 #ancho pantalla
+        a=1000 #ancho pantalla
         b=600 #largo pantalla
 
         black=(0,0,0)
@@ -769,6 +771,8 @@ def VentanaJuego(nombre):
             root_jueg.fill(black)
             root_jueg.blit(fondo,(0,0))
 
+            Count+=1
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     i=0
@@ -813,7 +817,7 @@ def VentanaJuego(nombre):
             y_a+=int(a)
             xi_a-=a//2 #desplaza el eje de imagen para dar efecto de crecer sobre sí misma
             yi_a-=a//2
-
+            
 
             x_e+=int(e) #aumenta el incremento de "exp"
             y_e+=int(e)
@@ -825,11 +829,16 @@ def VentanaJuego(nombre):
                 if salir:
                     break
                 else:
-                	print("+1 aro")
+                    Arop+=1
+                    print("+1 aro")
 
             if 52>x_e>50:
                 if (ev_choque_punt((xi_e,yi_e),(y_e,x_e),(posX_jug,posY_jug),(300,150))):
-                    print("energia +10")
+                    Energia_c+=10
+                    print("Energia+10")
+                elif Count==10:
+                    Count-=10
+                    Energia_c-=1
                 
             
 
@@ -845,7 +854,13 @@ def VentanaJuego(nombre):
             gen_img(Mira,posX_jug+121,posY_jug-50)
 
             Jug=pygame.transform.scale(Jug_c, (300, 150)) #El jugador siempre debe medir 300x150
-            
+
+            Text=pygame.font.SysFont("monospace",20)
+            Txt_E=Text.render("Energia: "+str(Energia_c),1,(255,255,0))
+            root_jueg.blit(Txt_E,(800,100))
+            Txt_A=Text.render("Aros: "+str(Arop),1,(255,255,0))
+            root_jueg.blit(Txt_A,(800,200))
+           
             pygame.display.update()
 
             c.tick(60)
