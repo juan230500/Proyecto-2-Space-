@@ -2,23 +2,21 @@ import pygame
 from pygame.locals import *
 from random import *
 from time import *
+import time
 #from threading import Thread
 
 #           _____________________________
 #__________/Variables globales
-global in1, posX_jug, posY_jug, score, lives
+global in1, posX_jug, posY_jug
 in1=1	#indicador para que el aro se sobre ponga a la nave
 posX_jug=300
 posY_jug=300
-score=0 #puntuacion
-lives=3 #
 
 pygame.init()
 
-Text=pygame.font.SysFont("monospace",50) #Texto inicializado
 #           _____________________________
 #__________/Crear pantalla
-a=1000 #ancho pantalla
+a=800 #ancho pantalla
 b=600 #largo pantalla
 
 black=(0,0,0)
@@ -29,7 +27,11 @@ c=pygame.time.Clock()
 
 #           _____________________________
 #__________/Cargar imagenes
-Jug=pygame.image.load("1.jpg") #Jugador
+Jug_w=pygame.image.load("Jug_w.png") #Jugador hacia arriba
+Jug_a=pygame.image.load("Jug_a.png") #Jugador hacia la izquierda
+Jug_s=pygame.image.load("Jug_s.png") #Jugador hacia abajo
+Jug_d=pygame.image.load("Jug_d.png") #Jugador hacia la derecha
+Jug=pygame.image.load("Jug_c.png") #Jugador centro
 Aro=pygame.image.load("2.png") #Aro
 fondo=pygame.image.load("fondo.jpg") #Fondo
 Mira=pygame.image.load("mira.png") 
@@ -51,20 +53,18 @@ def gen_img(img,x,y): #Generar cualquier imagen
 
 def exp(surf,x,y,xi,yi): #Exapandir superficie (surf), se expande a x,y y se colaca siempre en xi,yi
 	global in1
+	time.sleep(0.001)
 	if x>500: #Si sobre pasa la medida 500x500 traspasa al jugaodr
 		in1=0
 	surf=pygame.transform.scale(surf, (x, y))
 	root.blit(surf,(xi,yi))
 
 def ev_choque(pos1,l1,pos2,l2):
-        global score, lives
-        if pos2[0]<=pos1[0]<=pos2[0]+l1 and pos2[1]<=pos1[1]<=pos2[1]+l2:
-                score=score+1 #se suma uno a la puntuacion
-                print("SI")
-        else:
-                lives=lives-1 #se resta una vida
-                print("NO")
-        return
+	if pos2[0]<=pos1[0]<=pos2[0]+l2 and pos2[1]<=pos1[1]<=pos2[1]+l2:
+		print("SI")
+	else:
+		print("NO")
+	return
 
 
 #           _____________________________
@@ -84,11 +84,6 @@ a=6 #incremento de aro inicial
 while i:
 	root.fill(black)
 	root.blit(fondo,(0,0))
-
-	label=Text.render("Score: "+str(score),1,(255,255,0))
-	root.blit(label,(650,100))
-	label2=Text.render("Lives: "+str(lives),1,(255,255,0))
-	root.blit(label2,(650,300))
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -123,7 +118,7 @@ while i:
 	yi_a-=a//2
 
 	if x_a>500 and in1==1:
-		ev_choque((posX_jug,posY_jug),300,(xi_a,yi_a),300)
+		ev_choque((posX_jug,posY_jug),150,(xi_a,yi_a),500)
 	
 
 	if in1: #si debe traspasarlo, entonces se genera primero el aro
@@ -135,7 +130,7 @@ while i:
 
 	gen_img(Mira,posX_jug+50,posY_jug-50)
 
-	Jug=pygame.transform.scale(Jug, (150, 150)) #El jugador siempre debe medir 100x100
+	Jug=pygame.transform.scale(Jug, (300, 150)) #El jugador siempre debe medir 100x100
 	
 	pygame.display.update()
 

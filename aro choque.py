@@ -32,9 +32,14 @@ Jug_a=pygame.image.load("Jug_a.png") #Jugador hacia la izquierda
 Jug_s=pygame.image.load("Jug_s.png") #Jugador hacia abajo
 Jug_d=pygame.image.load("Jug_d.png") #Jugador hacia la derecha
 Jug_c=pygame.image.load("Jug_c.png") #Jugador centro
-Aro=pygame.image.load("2.png") #Aro
+Jug=pygame.image.load("Jug_c.png") #Jugador
+Aro=pygame.image.load("Aro.png") #Aro
 fondo=pygame.image.load("fondo.jpg") #Fondo
-Mira=pygame.image.load("mira.png") 
+Mira=pygame.image.load("mira.png")
+
+#           _____________________________
+#__________/Efectos de sonido
+colision_sonido= pygame.mixer.Sound('crash.wav')
 
 #           _____________________________
 #__________/Generar y reescalar imagenes
@@ -59,12 +64,18 @@ def exp(surf,x,y,xi,yi): #Exapandir superficie (surf), se expande a x,y y se col
 	surf=pygame.transform.scale(surf, (x, y))
 	root.blit(surf,(xi,yi))
 
-def ev_choque(pos1,l1,pos2,l2):
-	if pos2[0]<=pos1[0]<=pos2[0]+l2 and pos2[1]<=pos1[1]<=pos2[1]+l2:
-		print("SI")
-	else:
-		print("NO")
-	return
+def ev_aro(PosJug,PosAro):
+   print (PosJug)
+   print (PosAro)
+   if PosJug[0]<(PosAro[0]+500) and (PosJug[0]+300)>=PosAro[0] and PosJug[1]+150>=PosAro[1] and (PosJug[1]+150)<=(PosAro[1]+500):
+      if PosJug[0]>(PosAro[0]+10) and (PosJug[0]+300)<(PosAro[0]+490) and PosJug[1]>(PosAro[1]+10) and (PosJug[1]+150)<(PosAro[1]+480):
+         print ('Pasa')
+      else:
+         print ('Choca')
+         colision_sonido.play()
+   else:
+      print ('No suma')
+   return
 
 
 #           _____________________________
@@ -94,29 +105,29 @@ while i:
 	if teclas[pygame.K_LEFT] or teclas[97]:
 		if posX_jug>=10:
 			posX_jug-=10
-			Jug_c=pygame.transform.scale(Jug_a, (posX_jug, posY_jug))
+			Jug=pygame.transform.scale(Jug_a, (300, 150))
 	elif teclas[pygame.K_RIGHT] or teclas[100]:
-		if posX_jug<=590:
+		if posX_jug<=499:
 			posX_jug+=10
-			Jug_c=pygame.transform.scale(Jug_d, (posX_jug, posY_jug))
+			Jug=pygame.transform.scale(Jug_d, (300, 150))
 	elif teclas[pygame.K_UP] or teclas[119]:
-		if posY_jug>=10:
+		if posY_jug>=60:
 			posY_jug-=10
-			Jug_c=pygame.transform.scale(Jug_w, (posX_jug, posY_jug))
+			Jug=pygame.transform.scale(Jug_w, (300, 150))
 	elif teclas[pygame.K_DOWN] or teclas[115]:
-		if posY_jug<=490:
+		if posY_jug<=445:
 			posY_jug+=10
-			Jug_c=pygame.transform.scale(Jug_s, (posX_jug, posY_jug))
-	else:
-		Jug_c=pygame.transform.scale(Jug_c, (posX_jug, posY_jug))
+			Jug=pygame.transform.scale(Jug_s, (300, 150))
+
+		
 
 
 	if x_a>600: #Si el aro mide más de 600x600 se resetean sus condiciones de inicio
 		x_a,y_a=50,50
 		in1=1
-		xi_a,yi_a=randint(300,400),randint(300,400) #Se varía un poco el eje
+		xi_a,yi_a=randint(100,500),randint(200,500) #Se varía un poco el eje
 		if a<14: 
-			a+=1 #Se limita la velocidad de incremento
+			a+=0.5 #Se limita la velocidad de incremento
 
 	x_a+=int(a) #aumenta el incremento de "exp"
 	y_a+=int(a)
@@ -124,7 +135,7 @@ while i:
 	yi_a-=a//2
 
 	if x_a>500 and in1==1:
-		ev_choque((posX_jug,posY_jug),150,(xi_a,yi_a),500)
+		ev_aro((posX_jug,posY_jug),(xi_a,yi_a))
 	
 
 	if in1: #si debe traspasarlo, entonces se genera primero el aro
@@ -134,9 +145,9 @@ while i:
 		gen_img(Jug,posX_jug,posY_jug)
 		exp(Aro,x_a,y_a,xi_a,yi_a)
 
-	gen_img(Mira,posX_jug+50,posY_jug-50)
+	gen_img(Mira,posX_jug+121,posY_jug-50)
 
-	Jug=pygame.transform.scale(Jug, (300, 150)) #El jugador siempre debe medir 100x100
+	Jug=pygame.transform.scale(Jug_c, (300, 150)) #El jugador siempre debe medir 300x150
 	
 	pygame.display.update()
 
