@@ -714,11 +714,24 @@ def Ventana3():
     Btn_a4.image=imb_b
     Btn_a4.place(x=20+100,y=40+100)
 
-
     def back():
         v3.destroy()
         root.deiconify()
 
+    Silueta=cargarImg("SH.png")
+    Sh_cv=Label(C_v3, image=Silueta, bg='white')
+    Sh_cv.photo=Silueta
+    Sh_cv.place(x=500,y=310)
+
+    flchi=cargarImg("flechaizquierda.gif")
+    Btn_fi = Button(C_v3, image=flchi , command=back,fg="#000000")
+    Btn_fi.image=flchi
+    Btn_fi.place(x=400,y=450)
+
+    flchd=cargarImg("flechaderecha.gif")
+    Btn_fd = Button(C_v3, image=flchd , command=back,fg="#000000")
+    Btn_fd.image=flchd
+    Btn_fd.place(x=600,y=450)
         
     home=cargarImg("home.gif")
     Btn_back1 = Button(C_v3, image=home ,command=back, fg = "#000000")
