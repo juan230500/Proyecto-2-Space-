@@ -1,143 +1,111 @@
-import pygame
-from pygame.locals import *
-from random import *
-from time import *
-import time
-#from threading import Thread
 
-#           _____________________________
-#__________/Variables globales
-global in1, posX_jug, posY_jug
-in1=1	#indicador para que el aro se sobre ponga a la nave
-posX_jug=300
-posY_jug=300
+#_________________/Generar lista aleatoria de jugadores
+def escribir_1(arch):
+    from random import randint
+    file=open(arch,"w")
 
-pygame.init()
+    def gen(lon,res):
+        v="aaeeuio"
+        c="qwrrtypssdfghjklzxcvbnm"
+        punt_max=20
+        if lon==0 or lon==1:
+            i=randint(0,punt_max)
+            return res.capitalize()+","+str(i)
+        else:
+            i=randint(0,len(c)-1)
+            j=randint(0,len(v)-1)
+            return gen(lon-2,res+c[i]+v[j])
 
-#           _____________________________
-#__________/Crear pantalla
-a=800 #ancho pantalla
-b=600 #largo pantalla
+    def gen_mult(cant,res):
+        if cant==0:
+            return res
+        else:
+            i=randint(2,8)
+            return gen_mult(cant-1,res+gen(i,"")+"\n")
 
-black=(0,0,0)
+    nom=gen_mult(19,"")
+    file.write(nom)
+    file.close()
 
-root=pygame.display.set_mode((a,b))
-pygame.display.set_caption("Juego")
-c=pygame.time.Clock()
+#_________________/Leer lista de jugadores
 
-#           _____________________________
-#__________/Cargar imagenes
-Jug_w=pygame.image.load("Jug_w.png") #Jugador hacia arriba
-Jug_a=pygame.image.load("Jug_a.png") #Jugador hacia la izquierda
-Jug_s=pygame.image.load("Jug_s.png") #Jugador hacia abajo
-Jug_d=pygame.image.load("Jug_d.png") #Jugador hacia la derecha
-Jug_c=pygame.image.load("Jug_c.png") #Jugador centro
-Aro=pygame.image.load("2.png") #Aro
-fondo=pygame.image.load("fondo.jpg") #Fondo
-Mira=pygame.image.load("mira.png") 
+def leer(arch):
+    file=open(arch,"r")
 
-#           _____________________________
-#__________/Generar y reescalar imagenes
-'''def car(x,y): #Generar jugador
-	root.blit(Jug,(x,y))
+    def agrupar(file):
+        c=0
+        l=[]
+        while(c!=""):
+            c=file.readline()
+            c=c[:-1]
+            l+=[c]
+        l.pop(-1)
+        return l
 
-def aro(x,y): #Generar aro
-	root.blit(Aro,(x,y))
+    def trad(st):
+        t=["",0]
+        for i in range(len(st)):
+            if st[i]==",":
+                t[1]=int(st[i+1:])
+                break
+            else:
+                t[0]+=st[i]
+        return tuple(t)
 
-def mira(x,y): #Generar aro
-	root.blit(Mira,(x,y))'''
+    l=[]
+    for i in agrupar(file):
+        l+=[trad(i)]
 
-def gen_img(img,x,y): #Generar cualquier imagen
-	root.blit(img,(x,y))
-
-
-def exp(surf,x,y,xi,yi): #Exapandir superficie (surf), se expande a x,y y se colaca siempre en xi,yi
-	global in1
-	time.sleep(0.001)
-	if x>500: #Si sobre pasa la medida 500x500 traspasa al jugaodr
-		in1=0
-	surf=pygame.transform.scale(surf, (x, y))
-	root.blit(surf,(xi,yi))
-
-def ev_choque(pos1,l1,pos2,l2):
-	if pos2[0]<=pos1[0]<=pos2[0]+l2 and pos2[1]<=pos1[1]<=pos2[1]+l2:
-		print("SI")
-	else:
-		print("NO")
-	return
-
-
-#           _____________________________
-#__________/Posiciones
-
-xi_a,yi_a=300,300 #posicon inicial del aro
-x_a=100
-y_a=100
-
-i=1 #indicador de parada del while principal
-a=6 #incremento de aro inicial
+    file.close()
+    return l
 
 
 
-#           _____________________________
-#__________/movimiento
-while i:
-	root.fill(black)
-	root.blit(fondo,(0,0))
+#_________________/Ordenar lista de jugadores
+def ordenar(li):
+    def quicksort(L, first, last):
+        # definimos los índices y calculamos el pivote
+        i = first
+        j = last    
+        pivote = (L[i][1] + L[j][1]) / 2
 
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			i=0
+        # iteramos hasta que i no sea menor que j
+        while i < j:
+            # iteramos mientras que el valor de L[i] sea menor que pivote
+            while L[i][1] < pivote:
+                # Incrementamos el índice
+                i+=1
+            # iteramos mientras que el valor de L[j] sea mayor que pivote
+            while L[j][1] > pivote:
+                # decrementamos el índice
+                j-=1
+            # si i es menor o igual que j significa que los índices se han cruzado
+            if i <= j:
+                # creamos una variable temporal para guardar el valor de L[j]
+                x = L[j]
+                # intercambiamos los valores de L[j] y L[i]
+                L[j] = L[i]
+                L[i] = x
+                # incrementamos y decrementamos i y j respectivamente
+                i+=1
+                j-=1
 
-	teclas = pygame.key.get_pressed()
+        # si first es menor que j mantenemos la recursividad
+        if first < j:
+            L = quicksort(L, first, j)
+        # si last es mayor que i mantenemos la recursividad
+        if last > i:
+            L = quicksort(L, i, last)
 
-	if teclas[pygame.K_LEFT] or teclas[97]:
-		if posX_jug>=10:
-			posX_jug-=10
-			Jug_c=pygame.transform.scale(Jug_a, (posX_jug, posY_jug))
-	elif teclas[pygame.K_RIGHT] or teclas[100]:
-		if posX_jug<=590:
-			posX_jug+=10
-			Jug_c=pygame.transform.scale(Jug_d, (posX_jug, posY_jug))
-	elif teclas[pygame.K_UP] or teclas[119]:
-		if posY_jug>=10:
-			posY_jug-=10
-			Jug_c=pygame.transform.scale(Jug_w, (posX_jug, posY_jug))
-	elif teclas[pygame.K_DOWN] or teclas[115]:
-		if posY_jug<=490:
-			posY_jug+=10
-			Jug_c=pygame.transform.scale(Jug_s, (posX_jug, posY_jug))
-	else:
-		Jug_c=pygame.transform.scale(Jug_c, (posX_jug, posY_jug))
+        # devolvemos la lista ordenada
+        return L
+
+    return quicksort(li,0,len(li)-1)
+
+escribir_1("t.txt")
+a=leer("t.txt")
+a=ordenar(a)
+print(a)
 
 
-	if x_a>600: #Si el aro mide más de 600x600 se resetean sus condiciones de inicio
-		x_a,y_a=50,50
-		in1=1
-		xi_a,yi_a=randint(300,400),randint(300,400) #Se varía un poco el eje
-		if a<14: 
-			a+=1 #Se limita la velocidad de incremento
 
-	x_a+=int(a) #aumenta el incremento de "exp"
-	y_a+=int(a)
-	xi_a-=a//2 #desplaza el eje de imagen para dar efecto de crecer sobre sí misma
-	yi_a-=a//2
-
-	if x_a>500 and in1==1:
-		ev_choque((posX_jug,posY_jug),150,(xi_a,yi_a),500)
-	
-
-	if in1: #si debe traspasarlo, entonces se genera primero el aro
-		exp(Aro,x_a,y_a,xi_a,yi_a)
-		gen_img(Jug,posX_jug,posY_jug)
-	else: #si no debe traspasarlo, entonces se genera primero el jugador
-		gen_img(Jug,posX_jug,posY_jug)
-		exp(Aro,x_a,y_a,xi_a,yi_a)
-
-	gen_img(Mira,posX_jug+50,posY_jug-50)
-
-	Jug=pygame.transform.scale(Jug, (300, 150)) #El jugador siempre debe medir 100x100
-	
-	pygame.display.update()
-
-	c.tick(60)
