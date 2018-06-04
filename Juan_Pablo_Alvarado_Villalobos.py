@@ -150,7 +150,7 @@ def off():
 def play1():
     off()
     def Song1():
-        winsound.PlaySound('song1.wav', winsound.SND_ASYNC)
+        winsound.PlaySound('Moisture Deficit.wav', winsound.SND_ASYNC)
     ''''imagen = cargarImg("img1.gif")
     imagenc.config(image=imagen)'''
     p1=Thread(target=Song1,args=())
@@ -160,7 +160,7 @@ def play1():
 def play2():
     off()
     def Song2():
-        winsound.PlaySound('song2.wav', winsound.SND_ASYNC)
+        winsound.PlaySound('Asteroid Coaster.wav', winsound.SND_ASYNC)
     '''imagen2 = cargarImg("img2.gif")
     imagenc.config(image=imagen2)'''
     p2=Thread(target=Song2,args=())
@@ -183,7 +183,7 @@ i_per=0
 
 global dic_trad,dic_trad_es,dic_trad_en
 
-dic_trad_es=["Ventana principal","Introduzca el nombre \n (máx 10 caracteres)","Puntuaciones",'Atrás',"Juego",
+dic_trad_es=["Ventana principal","Introduce tu nombre \n (máx 10 caracteres)","Puntuaciones",'Atrás',"Juego",
              "Balas restantes: ","Enemigos restantes: ","arriba: w \nabajo: s \nizquierda: a \nderecha: d \n disparo: espaciadora",
              "Nombre debe ser menor de 10 caracteres","Introduzca nombre","Jugador: ","Opciones","Puntaje máximo: ",
              "Nivel ","Mapa ","Aleatorio", "Reiniciar puntuaciones","Clave","Clave érronea","Reiniciar puntajes (requiere clave)","Dificultad",
@@ -195,12 +195,13 @@ País de Producción: Costa Rica
 Profesor: Milton Villegas Lemus
 Como implementar: Se invoca con F5 desde el Idle del código
 Programa: II Proyecto
-Autores: Juan Pablo Alvarado Villalobos, Sebastián "chino", ¿Julian?
+Autores: Juan Pablo Alvarado Villalobos, Sebastián "chino", Julian
 Carné: 2018135360,XXX,XXX
 Lenguaje: Python 3.6
 Versión: 6.1
 Ult.Fecha de mod: 3/6/18
-******************************************************************""","Hacer clic en la pantalla para usar el teclado"]
+******************************************************************""","Hacer clic en la pantalla para usar el teclado",
+"Elegir modo de juego\nAros/Enemigos"]
 
 dic_trad_en=["Main window","Enter the name \n (max 10 characters)","Scores",'Back',"Game",
              "Remaining bullets: ", "Remaining enemies: ", " up: w \n down: s \n left: a \n right: d \n shot: space",
@@ -219,7 +220,8 @@ Cardé: 2018135360,XXX,XXX
 Language: Python 3.6
 Version: 6.1
 Last modified date: 3/6/18
-******************************************************************""","Click on the screen to use the keyboard"]
+******************************************************************""","Click on the screen to use the keyboard",
+"Choose game mode\nHoops / Enemies"]
 
 
 dic_trad=dic_trad_en #lista con todas las palabras que se leerá en todo el programa
@@ -296,6 +298,7 @@ C_root.create_image(400,300,image=CE0)
 CE1=cargarImg("fonp.gif")
 CE2=cargarImg("foni.gif")
 CE3=cargarImg("fons.gif")
+CE4=cargarImg("fon_sel.gif")
 
 
 L_vr1=Label(C_root,text=dic_trad[22],bg="grey",fg="black",font=('Eras Bold ITC',32))
@@ -642,12 +645,12 @@ def VentanaJuego(nombre):
 
     C_va=Canvas(va,width=800,height=600,bg="light green")
     C_va.place(x=0,y=0)
-    C_va.create_image(400,300,image=CE2)
+    C_va.create_image(400,300,image=CE4)
 
-    tex=dic_trad[26]
+    tex=dic_trad[28]
 
-    L_va=Label(va,text=tex,bg="white",fg="#000000",font=('Eras Bold ITC',12),justify=CENTER)
-    L_va.place(x=130,y=20)
+    L_va=Label(va,text=tex,bg="white",fg="#000000",font=('Eras Bold ITC',32),justify=CENTER)
+    L_va.place(x=200,y=20)
 
 
     def Juego(dft):
@@ -836,9 +839,10 @@ def VentanaJuego(nombre):
                 if (ev_choque_punt((xi_e,yi_e),(y_e,x_e),(posX_jug,posY_jug),(300,150))):
                     Energia_c+=10
                     print("Energia+10")
-                elif Count==10:
-                    Count-=10
-                    Energia_c-=1
+                    
+            if Count==10:
+                Count-=10
+                Energia_c-=1
                 
             
 
@@ -880,12 +884,12 @@ def VentanaJuego(nombre):
     home=cargarImg("aro.gif")
     Btn_back1 = Button(C_va, image=home ,command=aro, fg = "#000000")
     Btn_back1.image = home
-    Btn_back1.place(x=500,y=300)
+    Btn_back1.place(x=200,y=120)
 
     home1=cargarImg("aste.gif")
     Btn_back2 = Button(C_va, image=home1 ,command=enemigos, fg = "#000000")
     Btn_back2.image = home1
-    Btn_back2.place(x=250,y=300)
+    Btn_back2.place(x=200,y=360)
 	
     
 #______________/Sección de preventana del juego
